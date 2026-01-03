@@ -1,0 +1,38 @@
+version: '3'
+
+services: 
+  proxy:
+    image: nginx:alpine
+    container_name: proxy-server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app1
+      - app2  
+      - app3
+  app1: 
+    build: . # Dockerfile path
+    environment:
+      - APP_NAME=App1 # Environment variable to differentiate apps
+    ports:
+      - "3001:3000" # Map host port 3001 to container port 3000
+  
+  app2:
+    build: . 
+    environment:
+      - APP_NAME=App2
+    ports:
+      - "3002:3000"
+  
+  app3:
+    build: . 
+    environment:
+      - APP_NAME=App3
+    ports:
+      - "3003:3000"
+  
+# all three services use the same Dockerfile but can be differentiated using the APP_NAME environment variable.
+
+# with docker compose you can, not only start existing images but you can build image from a dockerfile and then start the container from that image.
